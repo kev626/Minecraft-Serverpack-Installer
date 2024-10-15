@@ -500,7 +500,10 @@ else:
                             dl_data = get_mod_download_url(file["projectID"],file["fileID"])
                             dl_url = dl_data["downloadUrl"]
                             if dl_url != None:
-                                download_wget(dl_url, "mods/")
+                                try:
+                                    download_wget(dl_url, "mods/")
+                                except:
+                                    pass
                             else:
                                 pass
 
