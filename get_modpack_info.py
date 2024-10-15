@@ -545,7 +545,7 @@ def get_modpack_minecraft_version(provider, modpack_id):
         except:
             return False
 
-def get_mod_download_url(mod_id, verison_id):
+def get_mod_download_url(mod_id, version_id):
     url = f'https://api.curseforge.com/v1/mods/{mod_id}/files/{version_id}'
     HEADERS = {'user-agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'),
                'referer': 'https://www.curseforge.com/minecraft/modpacks',
