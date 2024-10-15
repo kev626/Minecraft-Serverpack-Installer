@@ -493,6 +493,7 @@ else:
                 if name:
                     manifest_installer = True
                     print("Running manifest installer...")
+                    os.makedirs("mods/", exist_ok=True)
                     manifest = json.load(open(f"{this_dir}/{folder_name}/manifest.json"))
                     for file in tqdm(manifest["files"]):
                         if file["required"] == True:
