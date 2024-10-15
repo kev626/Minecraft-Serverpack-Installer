@@ -146,7 +146,10 @@ def get_server_modpack_url(provider, modpack_id, modpack_version, operating_syst
 
                     normal_downloadurl = version["downloadUrl"]
 
-                    server_pack_id = version["serverPackFileId"]
+                    try:
+                        server_pack_id = version["serverPackFileId"]
+                    except:
+                        server_pack_id = 'someRandomValueBecauseSomeModpackVersionsDontHaveAServerPackId'
 
                     if (len(str(modpack_version)) > 2) and (modpack_version) in str(display_name):
                         try:
@@ -178,7 +181,10 @@ def get_server_modpack_url(provider, modpack_id, modpack_version, operating_syst
 
             normal_downloadurl = version["downloadUrl"]
 
-            server_pack_id = version["serverPackFileId"]
+            try:
+                server_pack_id = version["serverPackFileId"]
+            except:
+                server_pack_id = 'someRandomValueBecauseSomeModpackVersionsDontHaveAServerPackId'
 
             if (release_type == 1) and (date_obj > newest_date_release):
                 newest_date_release = date_obj
@@ -538,3 +544,13 @@ def get_modpack_minecraft_version(provider, modpack_id):
             return game_version
         except:
             return False
+
+def get_mod_download_url(mod_id, verison_id):
+    url = f'https://api.curseforge.com/v1/mods/{mod_id}/files/{version_id}'
+    HEADERS = {'user-agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'),
+               'referer': 'https://www.curseforge.com/minecraft/modpacks',
+               'x-api-key': '$2a$10$Ynz1tT6cTV7vz1OUBS.lgOHanAXskT7KqCq6jXyRSGgk9DPA9mjEG',
+              }
+    response = requests.get(url, timeout=60, headers=HEADERS).json()["data"]
+    return (response)
+

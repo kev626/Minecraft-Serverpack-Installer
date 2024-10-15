@@ -5,7 +5,7 @@ import subprocess
 from time import sleep
 import glob
 from shutil import move, rmtree, copy
-from get_modpack_info import get_server_modpack_url, get_modpack_minecraft_version
+from get_modpack_info import get_server_modpack_url, get_modpack_minecraft_version, get_mod_download_url
 from get_forge_or_fabric_version import get_forge_or_fabric_version_from_manifest
 from download_modrinth_mods import download_modrinth_mods, move_modrinth_overrides, grab_modrinth_serverjars
 from download_file import download, download_wget
@@ -16,6 +16,8 @@ import pathlib
 import platform
 import sys
 import argparse
+import json
+from tqdm import tqdm
 
 parser = argparse.ArgumentParser(
     description="Set options for modpack installer.")
@@ -491,8 +493,15 @@ else:
                 if name:
                     manifest_installer = True
                     print("Running manifest installer...")
-                    os.system(
-                        f'''java -jar "{this_dir}/ModpackDownloader-cli-0.7.2.jar" -manifest "{this_dir}/{folder_name}/manifest.json" -folder "{this_dir}/{folder_name}/mods"''')
+                    manifest = json.load(open(f"{this_dir}/{folder_name}/manifest.json"))
+                    for file in tqdm(manifest["files"]):
+                        if file["required"] == True:
+                            dl_data = get_mod_download_url(file["projectID"],file["fileID"])
+                            dl_url = dl_data["downloadUrl"]
+                            if dl_url != None:
+                                download_wget(dl_url, "mods/")
+                            else:
+                                pass
 
         # If there was no included forge/fabric or serverstarter installer, as well as no manifest.json provided in the serverpack, look for existing forge or fabric server jar. If they don't exist, get the manifest file and download the correct forge/fabric version and install it.
         server_jar_found = False
